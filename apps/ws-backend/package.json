@@ -2,6 +2,7 @@
   "name": "ws-backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -b ",
@@ -11,7 +12,8 @@
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.9",
     "jsonwebtoken": "^9.0.2",
-    "ws": "^8.18.1"
+    "ws": "^8.18.1",
+    "@repo/db": "workspace:*"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
