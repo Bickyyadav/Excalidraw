@@ -147,4 +147,15 @@ app.get("/chat/:roomId", async (req: Request, res: Response) => {
   res.json({ messages });
 });
 
+app.get("/room/:slug", async (req: Request, res: Response) => {
+  const slug = req.params.slug;
+
+  const room = await prismaClient.room.findMany({
+    where: {
+      slug: slug,
+    },
+  });
+  res.json({ room });
+});
+
 app.listen(3001);
