@@ -1,5 +1,5 @@
-import { WebSocketServer } from "ws";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { WebSocketServer,WebSocket } from "ws";
+import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common/config";
 import { prismaClient } from "@repo/db/client";
 
@@ -28,12 +28,13 @@ function checkUser(token: string): string | null {
     if (!decoded || !decoded.userId) {
       return null;
     }
+
     return decoded.userId;
   } catch (error) {
     console.log("🚀 ~ checkUser ~ error:", error);
     return null;
   }
-  return null;
+  // return null;
 }
 
 const users: User[] = [];
@@ -44,7 +45,7 @@ wss.on("connection", function connection(ws, request) {
     ws.close();
     return;
   }
-
+  //checking middleware in websocket
   const queryParams = new URLSearchParams(url.split("?")[1]);
   const token = queryParams.get("token") || "";
   if (!token) {

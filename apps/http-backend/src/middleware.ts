@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from "express";
+import { JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common/config";
+
+interface MyJwtPayload extends JwtPayload {
+  userId: string;
+}
 
 export function middleware(req: Request, res: Response, next: NextFunction) {
   const getToken = req.cookies.authToken;
@@ -10,7 +15,14 @@ export function middleware(req: Request, res: Response, next: NextFunction) {
   }
 
   const decoded = jwt.verify(getToken, JWT_SECRET);
-  if (decoded) {
+
+  if (typeof decoded === "string") {
+    return;
+  }
+
+  const payload = decoded as MyJwtPayload;
+
+  if (payload.userId) {
     //@ts-ignore
     req.userId = decoded.userId;
     next();

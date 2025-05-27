@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET, SECRET_KEY } from "@repo/backend-common/config";
+import { SECRET_KEY } from "@repo/backend-common/config";
 import { middleware } from "./middleware";
 import {
   createRoomSchema,
@@ -26,7 +26,6 @@ app.post("/sign-up", async (req: Request, res: Response) => {
 
   const { email, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
-
   const createUser = await prismaClient.user.create({
     data: {
       email,
@@ -39,7 +38,7 @@ app.post("/sign-up", async (req: Request, res: Response) => {
     data: { ...createUser },
   });
 });
-//@ts-ignore
+
 app.post("/sign-in", async (req: Request, res: Response) => {
   try {
     const parseData = signInSchema.safeParse(req.body);
@@ -81,7 +80,7 @@ app.post("/sign-in", async (req: Request, res: Response) => {
     const token = jwt.sign(tokenData, SECRET_KEY, {
       expiresIn: "1d",
     });
-    return res
+    res
       .status(200)
       .cookie("token", token, {
         maxAge: 1 * 24 * 60 * 60 * 1000,
@@ -91,6 +90,7 @@ app.post("/sign-in", async (req: Request, res: Response) => {
       .json({
         message: `Welcome back ${user.name}`,
       });
+    return;
   } catch (error) {
     console.log("🚀 ~ app.post ~ error:", error);
     res.status(400).json({
